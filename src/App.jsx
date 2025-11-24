@@ -54,9 +54,6 @@ const MainApp = ({ shogun, gunInstance, location }) => {
             <img src={logo} alt="Shogun Auth" className="w-12 h-12" />
             <div>
               <span className="font-semibold">Auth</span>
-              <p className="navbar-subtitle">
-                Secure, decentralized authentication
-              </p>
             </div>
           </div>
           <ThemeToggle />
@@ -152,7 +149,7 @@ const MainApp = ({ shogun, gunInstance, location }) => {
               </a>
             </div>
             <div className="flex items-center gap-4">
-              <a href="https://github.com/scobru/shogun-core" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              <a href="https://github.com/scobru/shogun-auth" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                 GitHub
               </a>
               <a href="https://shogun-eco.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
