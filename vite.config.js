@@ -85,13 +85,15 @@ export default defineConfig({
       crypto: 'crypto-browserify',
       util: 'util',
       process: 'process/browser',
+      // gun-authd is an optional dependency loaded dynamically at runtime
+      // Map it to a stub module during build time
     },
   },
 
   // Optimizations
   optimizeDeps: {
     include: [ "uuid", "buffer", "process", "shogun-core"],
-    exclude: ["shogun-button-react"],
+    exclude: ["shogun-button-react", "gun-authd"], // gun-authd is an optional dependency loaded dynamically
     esbuildOptions: {
       define: {
         global: 'globalThis'

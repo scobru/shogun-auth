@@ -15,6 +15,8 @@ import {
 } from "shogun-button-react";
 import { shogunConnector } from "shogun-button-react";
 import Gun from "gun";
+import "gun/sea"
+import "gun-authd"
 import EncryptedDataManager from "./components/vault/EncryptedDataManager";
 import { ThemeToggle } from "./components/ui/ThemeToggle";
 import UserInfo from "./components/UserInfo";
@@ -275,7 +277,7 @@ function App() {
         const peersToUse =
           fetchedRelays && fetchedRelays.length > 0
             ? fetchedRelays
-            : ["https://5eh4twk2f62autunsje4panime.srv.us//gun"];
+            : ["https://shogun-relay.scobrudot.dev/gun","https://peer.wallie.io/gun"];
 
         setRelays(peersToUse);
       } catch (error) {
@@ -300,7 +302,7 @@ function App() {
 
     // Use shogunConnector to initialize ShogunCore with backward compatible configuration
     const initShogun = async () => {
-      const gun = Gun({
+      const gun = new Gun({
         peers: relays,
         localStorage: false,
         radisk: false,
@@ -329,7 +331,11 @@ function App() {
         defaultPageSize: 20,
         connectionTimeout: 10000,
         debounceInterval: 100,
-        
+        deterministicAuth: {
+          enabled: true,
+          skipValidation: false,
+          debug: true,
+        },
       });
 
       // Add debug methods to window for testing
