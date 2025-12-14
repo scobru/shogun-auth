@@ -4881,10 +4881,10 @@ shogun-core@^6.7.0:
     uuid "^11.1.0"
     vm-browserify "^1.1.2"
 
-shogun-relays@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.npmjs.org/shogun-relays/-/shogun-relays-1.0.9.tgz"
-  integrity sha512-BAVaXMejrPH0YLbDeXDS87oddrZXJZ2/zQ7xhrPjfL+LolMakoUl9gw4yylckPWptXlNBzJcg1PfwYmcN0Zjww==
+shogun-relays@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/shogun-relays/-/shogun-relays-1.1.0.tgz#7b43823d6bc7fcff45b14b8850cb4a9c21576596"
+  integrity sha512-DXiIv5qk2KGxD0oIkdlVJy00xCrLnS8KCQUTwnpfd/nmp+yRtvZ+VZX44fy5XJ9GBBq0GT1bd0tnpwQjn8kjhA==
   dependencies:
     get-urls "^10.0.1"
     gun "^0.2020.1241"

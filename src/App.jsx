@@ -16,7 +16,6 @@ import {
 import { shogunConnector } from "shogun-button-react";
 import Gun from "gun";
 import "gun/sea"
-import "gun-authd"
 import EncryptedDataManager from "./components/vault/EncryptedDataManager";
 import { ThemeToggle } from "./components/ui/ThemeToggle";
 import UserInfo from "./components/UserInfo";

@@ -42,7 +42,7 @@
     "react-dom": "^19.2.1",
     "react-router-dom": "^7.6.2",
     "shogun-button-react": "^6.7.0",
-    "shogun-relays": "^1.0.9",
+    "shogun-relays": "^1.1.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "vercel": "^44.2.7",
