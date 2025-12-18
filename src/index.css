@@ -1,5 +1,5 @@
 /* === DAISYUI THEMES - Dark and Light === */
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
 
 @import "tailwindcss";
 
@@ -177,14 +177,14 @@
   @apply text-primary hover:text-primary/80 transition-colors;
 }
 
-/* JetBrains Mono font application */
+/* Google Sans Flex font application */
 body {
-  font-family: 'JetBrains Mono', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Google Sans Flex', 'Inter', system-ui, -apple-system, sans-serif;
   @apply bg-base-100 text-base-content;
 }
 
-/* Use JetBrains Mono for code and monospace contexts */
+/* Use Google Sans Flex for code and monospace contexts */
 code, pre, .font-mono {
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-family: 'Google Sans Flex', ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
