@@ -34,9 +34,42 @@ const MainApp = ({ shogun, gunInstance, location }) => {
 
   // Reference to track if a success message has been shown
   const authSuccessShown = useRef(false);
+  const magicLoginAttempted = useRef(false);
 
   // Load proofs when logged in
   useEffect(() => {
+    // Handle Magic Link Login
+    const magicLoginData = searchParams.get("magic_login");
+    
+    if (magicLoginData && !isLoggedIn && !magicLoginAttempted.current && shogun) {
+      magicLoginAttempted.current = true;
+      console.log("Found magic login data, attempting auth...");
+      
+      try {
+        const jsonString = atob(magicLoginData);
+        const data = JSON.parse(jsonString);
+        
+        if (data.type === "shogun-auth-pair" && data.pair) {
+          shogun.loginWithPair(data.username || "User", data.pair)
+            .then(() => {
+              console.log("Magic login successful!");
+              // Clear URL
+              searchParams.delete("magic_login");
+              navigate({
+                search: searchParams.toString(),
+              }, { replace: true });
+              alert("✅ Login effettuato via Magic Link!");
+            })
+            .catch(err => {
+              console.error("Magic login failed:", err);
+              alert("❌ Errore login Magic Link: " + err.message);
+            });
+        }
+      } catch (e) {
+        console.error("Invalid magic link data:", e);
+      }
+    }
+
     if (isLoggedIn) {
       // Show a success message if OAuth login was just completed
       if (location?.state?.authSuccess && !authSuccessShown.current) {
@@ -45,7 +78,7 @@ const MainApp = ({ shogun, gunInstance, location }) => {
         // Here you could show a toast or success alert
       }
     }
-  }, [isLoggedIn, location, redirectUrl, navigate]);
+  }, [isLoggedIn, location, redirectUrl, navigate, searchParams, shogun]);
 
   return (
     <div className="app-shell">

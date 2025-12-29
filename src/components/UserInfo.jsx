@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { gunAvatar } from 'gun-avatar';
+import QRCodeAuth from './QRCodeAuth';
 
 /**
  * Component to display user information
@@ -9,6 +10,7 @@ import { gunAvatar } from 'gun-avatar';
  */
 const UserInfo = ({ user, onLogout }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
 
   if (!user) {
     return null;
@@ -91,12 +93,18 @@ const UserInfo = ({ user, onLogout }) => {
 
         <div className="divider"></div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-2">
           <button 
             className="btn btn-sm btn-ghost"
             onClick={toggleDetails}
           >
             {showDetails ? 'Hide Details' : 'Show Details'}
+          </button>
+          <button 
+            className="btn btn-sm btn-primary"
+            onClick={() => setShowQRModal(true)}
+          >
+            📱 QR Code
           </button>
           <button 
             className="btn btn-sm btn-error"
@@ -121,6 +129,9 @@ const UserInfo = ({ user, onLogout }) => {
           </div>
         )}
       </div>
+      
+      {/* QR Code Authentication Modal */}
+      <QRCodeAuth isOpen={showQRModal} onClose={() => setShowQRModal(false)} />
     </div>
   );
 };
