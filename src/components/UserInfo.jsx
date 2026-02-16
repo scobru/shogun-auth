@@ -1,6 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import { gunAvatar } from 'gun-avatar';
-import QRCodeAuth from './QRCodeAuth';
+
+// Lazy load QRCodeAuth to reduce bundle size
+// This component imports heavy QR libraries (qrcode.react, react-qr-reader)
+const QRCodeAuth = React.lazy(() => import('./QRCodeAuth'));
 
 /**
  * Component to display user information
@@ -131,7 +134,17 @@ const UserInfo = ({ user, onLogout }) => {
       </div>
       
       {/* QR Code Authentication Modal */}
-      <QRCodeAuth isOpen={showQRModal} onClose={() => setShowQRModal(false)} />
+      {showQRModal && (
+        <Suspense fallback={
+          <dialog className="modal modal-open">
+            <div className="modal-box flex justify-center items-center h-40">
+              <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+          </dialog>
+        }>
+          <QRCodeAuth isOpen={showQRModal} onClose={() => setShowQRModal(false)} />
+        </Suspense>
+      )}
     </div>
   );
 };
