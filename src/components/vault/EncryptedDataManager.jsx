@@ -209,19 +209,36 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Data Key (e.g., 'password', 'api_key')"
-                value={dataKey}
-                onChange={(e) => setDataKey(e.target.value)}
-                className="input w-full"
-              />
-              <textarea
-                placeholder="Data Value (will be encrypted)"
-                value={dataValue}
-                onChange={(e) => setDataValue(e.target.value)}
-                className="textarea w-full min-h-[100px]"
-              />
+              <div className="form-control w-full">
+                <label htmlFor="dataKey" className="label">
+                  <span className="label-text font-medium">Data Key</span>
+                  <span className="label-text-alt text-secondary">Unique identifier</span>
+                </label>
+                <input
+                  id="dataKey"
+                  type="text"
+                  placeholder="e.g., 'password', 'api_key'"
+                  value={dataKey}
+                  onChange={(e) => setDataKey(e.target.value)}
+                  className="input w-full"
+                  required
+                />
+              </div>
+
+              <div className="form-control w-full">
+                <label htmlFor="dataValue" className="label">
+                  <span className="label-text font-medium">Data Value</span>
+                </label>
+                <textarea
+                  id="dataValue"
+                  placeholder="Content to encrypt..."
+                  value={dataValue}
+                  onChange={(e) => setDataValue(e.target.value)}
+                  className="textarea w-full min-h-[100px]"
+                  required
+                />
+              </div>
+
               <button
                 type="submit"
                 disabled={
@@ -290,12 +307,14 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                         <button
                           className="btn-custom btn-sm"
                           onClick={() => handleDecrypt(key)}
+                          aria-label={`Decrypt ${key}`}
                         >
                           Decrypt
                         </button>
                         <button
                           className="btn-custom btn-sm"
                           onClick={() => handleDelete(key)}
+                          aria-label={`Delete ${key}`}
                         >
                           Delete
                         </button>
