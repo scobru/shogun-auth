@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -204,19 +204,6 @@ const MainAppWithLocation = (props) => {
 };
 
 function ShogunApp({ shogun }) {
-  const appOptions = {
-    appName: "Shogun Auth App",
-    shogun,
-    authMethods: [
-      { type: "password" },
-      { type: "webauthn" },
-      { type: "web3" },
-      { type: "nostr" },
-      { type: "zkproof" },
-    ],
-    theme: "dark",
-  };
-
   // Usa useShogun dal context
   const { isLoggedIn, userPub, username, login, signUp, logout, sdk } =
     useShogun();
@@ -230,30 +217,32 @@ function ShogunApp({ shogun }) {
   };
 
   // Handler per login/logout (se vuoi log custom)
-  const handleLoginSuccess = (result) => {
+  const handleLoginSuccess = useCallback((result) => {
     console.log("Login success:", result);
-  };
-  const handleError = (error) => {
+  }, []);
+
+  const handleError = useCallback((error) => {
     console.error("Auth error:", error);
-  };
-  const handleLogout = async () => {
+  }, []);
+
+  const handleLogout = useCallback(async () => {
     try {
       await logout();
     } catch (err) {
       console.error("Logout error:", err);
     }
-  };
+  }, [logout]);
 
-  const providerOptions = {
-    appName: appOptions.appName,
-    theme: appOptions.theme,
+  const providerOptions = useMemo(() => ({
+    appName: "Shogun Auth App",
+    theme: "dark",
     showWebauthn: true,
     showMetamask: true,
     showNostr: true,
     showZkProof: true,
     enableGunDebug: true,
     enableConnectionMonitoring: true,
-  };
+  }), []);
 
   // Debug provider options
   console.log("ShogunButtonProvider options:", providerOptions);
