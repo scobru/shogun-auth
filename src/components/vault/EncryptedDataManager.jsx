@@ -209,19 +209,35 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Data Key (e.g., 'password', 'api_key')"
-                value={dataKey}
-                onChange={(e) => setDataKey(e.target.value)}
-                className="input w-full"
-              />
-              <textarea
-                placeholder="Data Value (will be encrypted)"
-                value={dataValue}
-                onChange={(e) => setDataValue(e.target.value)}
-                className="textarea w-full min-h-[100px]"
-              />
+              <div className="form-control">
+                <label htmlFor="dataKey" className="label">
+                  <span className="label-text font-medium">Data Key</span>
+                </label>
+                <input
+                  id="dataKey"
+                  type="text"
+                  placeholder="e.g., 'password', 'api_key'"
+                  value={dataKey}
+                  onChange={(e) => setDataKey(e.target.value)}
+                  className="input input-bordered w-full"
+                  required
+                />
+              </div>
+
+              <div className="form-control">
+                <label htmlFor="dataValue" className="label">
+                  <span className="label-text font-medium">Data Value</span>
+                </label>
+                <textarea
+                  id="dataValue"
+                  placeholder="Value to be encrypted"
+                  value={dataValue}
+                  onChange={(e) => setDataValue(e.target.value)}
+                  className="textarea textarea-bordered w-full min-h-[100px]"
+                  required
+                />
+              </div>
+
               <button
                 type="submit"
                 disabled={
