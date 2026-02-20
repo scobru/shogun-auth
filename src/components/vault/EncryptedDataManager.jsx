@@ -209,19 +209,33 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Data Key (e.g., 'password', 'api_key')"
-                value={dataKey}
-                onChange={(e) => setDataKey(e.target.value)}
-                className="input w-full"
-              />
-              <textarea
-                placeholder="Data Value (will be encrypted)"
-                value={dataValue}
-                onChange={(e) => setDataValue(e.target.value)}
-                className="textarea w-full min-h-[100px]"
-              />
+              <div className="form-control w-full">
+                <label className="label" htmlFor="dataKey">
+                  <span className="label-text">Data Key</span>
+                </label>
+                <input
+                  id="dataKey"
+                  type="text"
+                  placeholder="Data Key (e.g., 'password', 'api_key')"
+                  value={dataKey}
+                  onChange={(e) => setDataKey(e.target.value)}
+                  className="input input-bordered w-full"
+                />
+              </div>
+
+              <div className="form-control w-full">
+                <label className="label" htmlFor="dataValue">
+                  <span className="label-text">Data Value</span>
+                </label>
+                <textarea
+                  id="dataValue"
+                  placeholder="Data Value (will be encrypted)"
+                  value={dataValue}
+                  onChange={(e) => setDataValue(e.target.value)}
+                  className="textarea textarea-bordered w-full min-h-[100px]"
+                />
+              </div>
+
               <button
                 type="submit"
                 disabled={
@@ -290,12 +304,14 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                         <button
                           className="btn-custom btn-sm"
                           onClick={() => handleDecrypt(key)}
+                          aria-label={`Decrypt ${key}`}
                         >
                           Decrypt
                         </button>
                         <button
                           className="btn-custom btn-sm"
                           onClick={() => handleDelete(key)}
+                          aria-label={`Delete ${key}`}
                         >
                           Delete
                         </button>
