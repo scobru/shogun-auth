@@ -377,7 +377,7 @@ function App() {
       });
 
       // Add debug methods to window for testing
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && import.meta.env.DEV) {
         // Wait a bit for Gun to initialize
         setTimeout(() => {
           console.log("ShogunCore after initialization:", shogunCore);
