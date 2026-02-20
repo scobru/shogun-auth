@@ -16,9 +16,11 @@ import {
 import { shogunConnector } from "shogun-button-react";
 import Gun from "gun";
 import "gun/sea"
-import EncryptedDataManager from "./components/vault/EncryptedDataManager";
 import { ThemeToggle } from "./components/ui/ThemeToggle";
-import UserInfo from "./components/UserInfo";
+
+// Lazy load heavy components
+const EncryptedDataManager = React.lazy(() => import("./components/vault/EncryptedDataManager"));
+const UserInfo = React.lazy(() => import("./components/UserInfo"));
 import logo from "./assets/logo.svg";
 
 import "./index.css"; // Import Tailwind CSS
@@ -128,7 +130,9 @@ const MainApp = ({ shogun, gunInstance, location }) => {
         {/* Display user info after login */}
         {isLoggedIn && (
           <div className="mb-6">
-            <UserInfo user={{ userPub, username }} onLogout={logout} />
+            <React.Suspense fallback={<div className="flex justify-center p-4"><span className="loading loading-spinner loading-md"></span></div>}>
+              <UserInfo user={{ userPub, username }} onLogout={logout} />
+            </React.Suspense>
           </div>
         )}
 
@@ -162,10 +166,12 @@ const MainApp = ({ shogun, gunInstance, location }) => {
 
         {/* Add Encrypted Data Manager when user is logged in (but not if redirecting) */}
         {isLoggedIn && !redirectUrl && (
-          <EncryptedDataManager
-            shogun={shogun}
-            authStatus={{ user: { userPub, username }, isLoggedIn }}
-          />
+          <React.Suspense fallback={<div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>}>
+            <EncryptedDataManager
+              shogun={shogun}
+              authStatus={{ user: { userPub, username }, isLoggedIn }}
+            />
+          </React.Suspense>
         )}
 
         {/* Se vuoi gestire errori, aggiungi qui uno stato custom o usa error di useShogun se disponibile */}
