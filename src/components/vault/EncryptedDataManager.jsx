@@ -219,7 +219,7 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                   placeholder="e.g., 'password', 'api_key'"
                   value={dataKey}
                   onChange={(e) => setDataKey(e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input input-bordered w-full focus:input-primary transition-colors bg-base-100/50"
                   required
                 />
               </div>
@@ -233,7 +233,7 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                   placeholder="Value to be encrypted"
                   value={dataValue}
                   onChange={(e) => setDataValue(e.target.value)}
-                  className="textarea textarea-bordered w-full min-h-[100px]"
+                  className="textarea textarea-bordered w-full min-h-[100px] focus:textarea-primary transition-colors bg-base-100/50"
                   required
                 />
               </div>
@@ -280,22 +280,23 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
           </h3>
 
           {Object.keys(storedData).length === 0 ? (
-            <div className="text-center py-8 bg-base-200 rounded-lg border border-base-300">
-              <p className="text-sm uppercase tracking-wide text-secondary mb-2">
+            <div className="text-center py-12 bg-base-200/50 rounded-2xl border border-base-300 border-dashed animate-in fade-in duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-base-content/20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <p className="text-sm uppercase tracking-wider font-semibold text-base-content/50 mb-2">
                 Encrypted vault is empty
               </p>
-              <p className="text-secondary">
-                Add your first encrypted entry using the form above.
-              </p>
+              <p className="text-base-content/60 max-w-sm mx-auto">Add your first encrypted entry using the form above.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {Object.keys(storedData).map((key) => (
-                <div className="card" key={key}>
+                <div className="card bg-base-100 shadow-sm hover:shadow-md transition-all duration-300 border border-base-200 animate-in slide-in-from-bottom-2 fade-in group" key={key}>
                   <div className="card-body p-4">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                       <div>
-                        <h4 className="font-medium text-lg break-all">
+                        <h4 className="font-semibold text-lg break-all group-hover:text-primary transition-colors duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-primary" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
                           {key}
                         </h4>
                         <p className="text-xs text-secondary mt-1">
@@ -303,18 +304,8 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <button
-                          className="btn-custom btn-sm"
-                          onClick={() => handleDecrypt(key)}
-                        >
-                          Decrypt
-                        </button>
-                        <button
-                          className="btn-custom btn-sm"
-                          onClick={() => handleDelete(key)}
-                        >
-                          Delete
-                        </button>
+                        <button className="btn btn-sm btn-outline btn-primary transition-transform duration-200 hover:-translate-y-0.5" onClick={() => handleDecrypt(key)}>Decrypt</button>
+                        <button className="btn btn-sm btn-soft btn-error transition-transform duration-200 hover:-translate-y-0.5" onClick={() => handleDelete(key)}>Delete</button>
                       </div>
                     </div>
 
