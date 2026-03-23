@@ -1271,7 +1271,7 @@
   dependencies:
     tslib "^2.0.0"
 
-"@peculiar/webcrypto@^1.1.1":
+"@peculiar/webcrypto@^1.1.1", "@peculiar/webcrypto@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@peculiar/webcrypto/-/webcrypto-1.5.0.tgz#9e57174c02c1291051c553600347e12b81469e10"
   integrity sha512-BRs5XUAwiyCDQMsVA9IDvDa7UBR9gAvPHgugOeGng3YN6vJ9JYonyDc0lNczErgtCWtucjR5N7VtaonboD/ezg==
@@ -3315,14 +3315,13 @@ gun@0.2020.1240:
   optionalDependencies:
     "@peculiar/webcrypto" "^1.1.1"
 
-gun@^0.2020.1241:
+"gun@git+https://github.com/scobru/gun":
   version "0.2020.1241"
-  resolved "https://registry.yarnpkg.com/gun/-/gun-0.2020.1241.tgz#a43de6faf046d2a9b89d1b532a9346b88a90f1ee"
-  integrity sha512-rmGqLuJj4fAuZ/0lddCvXHbENPkEnBOBYpq+kXHrwQ5RdNtQ5p0Io99lD1qUXMFmtwNacQ/iqo3VTmjmMyAYZg==
+  resolved "git+https://github.com/scobru/gun#cb4a5d819024d2fb2b62aacfdfdf65efef56f440"
   dependencies:
-    ws "^7.2.1"
+    ws "^7.5.10"
   optionalDependencies:
-    "@peculiar/webcrypto" "^1.1.1"
+    "@peculiar/webcrypto" "^1.5.0"
 
 "gun@git+https://github.com/scobru/gun.git":
   version "0.2020.1241"
@@ -4800,10 +4799,9 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shogun-button-react@^6.9.10:
+"shogun-button-react@git+https://github.com/scobru/shogun-button-react":
   version "6.9.10"
-  resolved "https://registry.yarnpkg.com/shogun-button-react/-/shogun-button-react-6.9.10.tgz#7b22b0283a66a0f4e2ce7843d69aa2afec4f8b30"
-  integrity sha512-P9qWcshZkH19217BbqE0lejPAc91i0QIZ2NcX3C1v9P6o70ILqLP1ajHKT5VjZygjVygjwhsFiDrvIy65q72FQ==
+  resolved "git+https://github.com/scobru/shogun-button-react#d166170372177a953bea3ddc57df2b6d0e029a80"
   dependencies:
     assert "^2.1.0"
     buffer "^6.0.3"
@@ -4845,13 +4843,40 @@ shogun-core@^6.9.9:
     uuid "^11.1.0"
     vm-browserify "^1.1.2"
 
-shogun-relays@^1.1.3:
+"shogun-core@git+https://github.com/scobru/shogun-core":
+  version "6.9.9"
+  resolved "git+https://github.com/scobru/shogun-core#732f7acdc9de4a8333623996b30474e26ce0f43f"
+  dependencies:
+    "@hpke/chacha20poly1305" "^1.7.1"
+    "@hpke/hybridkem-x-wing" "^0.6.1"
+    "@hpke/ml-kem" "^0.2.1"
+    "@noble/ciphers" "2.0.1"
+    "@noble/curves" "^1.9.1"
+    "@noble/hashes" "^1.5.0"
+    "@noble/post-quantum" "^0.5.2"
+    "@scure/bip39" "^1.5.0"
+    assert "^2.1.0"
+    buffer "^6.0.3"
+    constants-browserify "^1.0.0"
+    crypto-browserify "^3.12.0"
+    elliptic "^6.6.1"
+    ethers "^6.13.5"
+    global "^4.4.0"
+    gun "git+https://github.com/scobru/gun"
+    lodash.merge "^4.6.2"
+    nostr-tools "^2.15.0"
+    openpgp "^6.2.2"
+    stream-browserify "^3.0.0"
+    ts-mls "^1.3.2"
+    uuid "^11.1.0"
+    vm-browserify "^1.1.2"
+
+"shogun-relays@git+https://github.com/scobru/shogun-relays":
   version "1.1.3"
-  resolved "https://registry.yarnpkg.com/shogun-relays/-/shogun-relays-1.1.3.tgz#ed47baaaf0c797ee6287f1759589c337d36c834f"
-  integrity sha512-cSqcpxS7cBi15yujPSSsCA3UAUlnYuO4xCDJP6gwMn8/8QOyu2mvAdzWnjnSqHHoIDGITVPHot85WZ8+6HIyWA==
+  resolved "git+https://github.com/scobru/shogun-relays#b4e9d42b0051c2373ab4c7991944ee3d2487e469"
   dependencies:
     get-urls "^10.0.1"
-    gun "git+https://github.com/scobru/gun.git"
+    gun "git+https://github.com/scobru/gun"
     node-fetch "^3.1.0"
 
 side-channel-list@^1.0.0:
@@ -5540,7 +5565,7 @@ ws@8.17.1:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.17.1.tgz#9293da530bb548febc95371d90f9c878727d919b"
   integrity sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==
 
-ws@^7.2.1:
+ws@^7.2.1, ws@^7.5.10:
   version "7.5.10"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.10.tgz#58b5c20dc281633f6c19113f39b349bd8bd558d9"
   integrity sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==
