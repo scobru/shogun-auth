@@ -315,13 +315,13 @@ function App() {
         const peersToUse =
           fetchedRelays && fetchedRelays.length > 0
             ? fetchedRelays
-            : ["https://shogun-relay.scobrudot.dev/gun","https://peer.wallie.io/gun"];
+            : ["https://gun.defucc.me/gun","https://gun.o8.is/gun","https://shogun-relay.scobrudot.dev/gun","https://relay.peer.ooo/gun"];
 
         setRelays(peersToUse);
       } catch (error) {
         console.error("Error fetching relays:", error);
         // Fallback to default peer
-        setRelays(["https://shogun-relay.scobrudot.dev/gun","https://peer.wallie.io/gun"]);
+        setRelays(["https://gun.defucc.me/gun","https://gun.o8.is/gun","https://shogun-relay.scobrudot.dev/gun","https://relay.peer.ooo/gun"]);
       } finally {
         setIsLoadingRelays(false);
       }
