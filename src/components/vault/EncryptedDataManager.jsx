@@ -192,48 +192,47 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
   };
 
   return (
-    <div className="card mb-6">
-      <div className="card-body">
-        <h2 className="card-title text-2xl flex items-center gap-2">
+    <div className="card mb-6 bg-base-200/50 rounded-[2rem] border border-base-content/5 overflow-hidden">
+      <div className="card-body p-4 sm:p-8">
+        <h2 className="card-title text-2xl sm:text-3xl font-bold flex items-center gap-3">
           Encrypted Data Vault
         </h2>
-        <p className="text-secondary mb-4">
-          Store and manage your encrypted data securely. All data is encrypted
-          using your personal keys and stored in GunDB.
+        <p className="text-sm sm:text-base text-base-content/60 mb-6 max-w-2xl">
+          Store and manage your encrypted data securely.
         </p>
 
-        <div className="card mb-6">
-          <div className="card-body">
-            <h3 className="card-title text-lg flex items-center gap-2">
+        <div className="card mb-8 bg-base-100 rounded-[1.5rem] border border-base-content/5 shadow-none">
+          <div className="card-body p-4 sm:p-6">
+            <h3 className="card-title text-lg sm:text-xl font-bold flex items-center gap-2 mb-4">
               Add New Encrypted Data
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               <div className="form-control">
-                <label htmlFor="dataKey" className="label">
-                  <span className="label-text font-medium">Data Key</span>
+                <label htmlFor="dataKey" className="label py-1">
+                  <span className="label-text font-bold text-base-content/70">Data Key</span>
                 </label>
                 <input
                   id="dataKey"
                   type="text"
-                  placeholder="e.g., 'password', 'api_key'"
+                  placeholder="e.g., 'password'"
                   value={dataKey}
                   onChange={(e) => setDataKey(e.target.value)}
-                  className="input input-bordered w-full focus:input-primary transition-colors bg-base-100/50"
+                  className="input input-bordered w-full rounded-2xl focus:input-primary transition-all bg-base-200/50 border-none"
                   required
                 />
               </div>
 
               <div className="form-control">
-                <label htmlFor="dataValue" className="label">
-                  <span className="label-text font-medium">Data Value</span>
+                <label htmlFor="dataValue" className="label py-1">
+                  <span className="label-text font-bold text-base-content/70">Data Value</span>
                 </label>
                 <textarea
                   id="dataValue"
                   placeholder="Value to be encrypted"
                   value={dataValue}
                   onChange={(e) => setDataValue(e.target.value)}
-                  className="textarea textarea-bordered w-full min-h-[100px] focus:textarea-primary transition-colors bg-base-100/50"
+                  className="textarea textarea-bordered w-full min-h-[100px] sm:min-h-[120px] rounded-2xl focus:textarea-primary transition-all bg-base-200/50 border-none"
                   required
                 />
               </div>
@@ -246,18 +245,18 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                   !dataValue.trim() ||
                   isSubmitting
                 }
-                className="btn-custom w-full"
+                className="btn btn-primary rounded-full w-full py-3 sm:py-4 h-auto text-base sm:text-lg font-bold shadow-none"
               >
                 {isSubmitting ? <span className="loading-custom"></span> : null}
-                {isSubmitting ? "Encrypting & Storing..." : "Encrypt & Store"}
+                {isSubmitting ? "Storing..." : "Encrypt & Store"}
               </button>
             </form>
 
             {error && (
-              <div className="alert-custom error mt-4">
+              <div className="alert-custom error mt-4 sm:mt-6">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="stroke-current shrink-0 h-6 w-6"
+                  className="stroke-current shrink-0 h-5 w-5 sm:h-6 sm:w-6"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -268,66 +267,63 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
                     d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span>{error}</span>
+                <span className="font-medium text-xs sm:text-sm">{error}</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+        <div className="mt-4">
+          <h3 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-2">
             Your Encrypted Data
           </h3>
 
           {Object.keys(storedData).length === 0 ? (
-            <div className="text-center py-12 bg-base-200/50 rounded-2xl border border-base-300 border-dashed animate-in fade-in duration-500">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-base-content/20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <p className="text-sm uppercase tracking-wider font-semibold text-base-content/50 mb-2">
-                Encrypted vault is empty
+            <div className="text-center py-12 sm:py-16 bg-base-100/50 rounded-[2rem] border-2 border-base-content/5 border-dashed animate-in fade-in duration-500">
+              <p className="text-xs uppercase tracking-[0.2em] font-black text-base-content/30 mb-2">
+                Vault is empty
               </p>
-              <p className="text-base-content/60 max-w-sm mx-auto">Add your first encrypted entry using the form above.</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {Object.keys(storedData).map((key) => (
-                <div className="card bg-base-100 shadow-sm hover:shadow-md transition-all duration-300 border border-base-200 animate-in slide-in-from-bottom-2 fade-in group" key={key}>
-                  <div className="card-body p-4">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                      <div>
-                        <h4 className="font-semibold text-lg break-all group-hover:text-primary transition-colors duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-primary" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
-                          {key}
-                        </h4>
-                        <p className="text-xs text-secondary mt-1">
-                          Encrypted item stored in your vault
-                        </p>
+                <div className="card bg-base-100 rounded-[1.5rem] border border-base-content/5 shadow-none animate-in slide-in-from-bottom-2 fade-in group" key={key}>
+                  <div className="card-body p-4 sm:p-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 sm:p-3 rounded-2xl bg-primary/10 text-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg sm:text-xl break-all">
+                            {key}
+                          </h4>
+                        </div>
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        <button className="btn btn-sm btn-outline btn-primary transition-transform duration-200 hover:-translate-y-0.5" onClick={() => handleDecrypt(key)}>Decrypt</button>
-                        <button className="btn btn-sm btn-soft btn-error transition-transform duration-200 hover:-translate-y-0.5" onClick={() => handleDelete(key)}>Delete</button>
+                      <div className="flex flex-row gap-2">
+                        <button className="btn btn-xs sm:btn-sm btn-outline btn-primary rounded-full px-4 transition-all" onClick={() => handleDecrypt(key)}>Decrypt</button>
+                        <button className="btn btn-xs sm:btn-sm btn-soft btn-error rounded-full px-4 transition-all" onClick={() => handleDelete(key)}>Delete</button>
                       </div>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h5 className="text-xs font-medium mb-1 uppercase tracking-wide text-secondary">
-                          Encrypted data (preview)
+                    <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1 sm:space-y-2">
+                        <h5 className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">
+                          Encrypted preview
                         </h5>
-                        <pre className="bg-base-300/70 border border-base-300 p-2 rounded text-xs overflow-x-auto whitespace-pre-wrap max-h-40">
+                        <pre className="bg-base-200/50 border border-base-content/5 p-3 sm:p-4 rounded-2xl text-[10px] sm:text-xs overflow-x-auto whitespace-pre-wrap max-h-40 font-mono">
                           {typeof storedData[key] === "string"
-                            ? storedData[key].substring(0, 120) +
-                              (storedData[key].length > 120 ? "..." : "")
-                            : JSON.stringify(storedData[key], null, 2)}
+                            ? storedData[key].substring(0, 80) + "..."
+                            : "..."}
                         </pre>
                       </div>
 
                       {decryptedData[key] && (
-                        <div>
-                          <h5 className="text-xs font-medium mb-1 uppercase tracking-wide text-secondary">
+                        <div className="space-y-1 sm:space-y-2 animate-in zoom-in-95 duration-300">
+                          <h5 className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-primary ml-1">
                             Decrypted value
                           </h5>
-                          <pre className="bg-base-300/70 border border-base-300 p-2 rounded text-xs overflow-x-auto whitespace-pre-wrap max-h-40">
+                          <pre className="bg-primary/5 border border-primary/10 p-3 sm:p-4 rounded-2xl text-[10px] sm:text-xs overflow-x-auto whitespace-pre-wrap max-h-40 font-mono text-primary font-bold">
                             {decryptedData[key]}
                           </pre>
                         </div>

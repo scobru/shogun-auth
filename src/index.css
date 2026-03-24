@@ -4,7 +4,53 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: "all";
+  themes: light, dark;
+}
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  color-scheme: "light";
+  primary: #6750A4;
+  primary-content: #FFFFFF;
+  secondary: #E8DEF8;
+  secondary-content: #1D192B;
+  accent: #F2B8B5;
+  neutral: #1C1B1F;
+  base-100: #FEF7FF;
+  base-200: #F3EDF7;
+  base-300: #E6E0E9;
+  base-content: #1C1B1F;
+  success: #16a34a;
+  error: #B3261E;
+  --rounded-box: 2rem;
+  --rounded-btn: 9999px;
+  --rounded-badge: 1.9rem;
+  --tab-radius: 9999px;
+  --border-btn: 0px;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  color-scheme: "dark";
+  primary: #D0BCFF;
+  primary-content: #381E72;
+  secondary: #4A4458;
+  secondary-content: #E8DEF8;
+  accent: #8C1D18;
+  neutral: #E6E1E5;
+  base-100: #141218;
+  base-200: #2B2930;
+  base-300: #36343B;
+  base-content: #E6E1E5;
+  success: #22c55e;
+  error: #F2B8B5;
+  --rounded-box: 2rem;
+  --rounded-btn: 9999px;
+  --rounded-badge: 1.9rem;
+  --tab-radius: 9999px;
+  --border-btn: 0px;
 }
 
 /* === CUSTOM STYLES PER SHOGUN-AUTH-APP === */
@@ -14,7 +60,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  @apply bg-gradient-to-br from-base-200 to-base-100 text-base-content selection:bg-primary/30 selection:text-primary;
+  @apply bg-base-100 text-base-content selection:bg-primary/30 selection:text-primary;
 }
 
 .app-shell main {
@@ -24,20 +70,27 @@
 .app-main {
   max-width: 960px;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 3rem;
+  padding: 1.5rem 1rem 4rem; /* Reduced for mobile */
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 640px) {
+  .app-main {
+    padding: 2.5rem 1.5rem 4rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .app-main {
     padding-top: 3rem;
-    padding-bottom: 4rem;
   }
 }
 
 /* Header */
 .navbar-custom {
-  @apply bg-base-100/80 backdrop-blur-xl border-b border-base-content/5 shadow-sm;
-  padding: 1rem 0;
+  @apply bg-base-100/80 backdrop-blur-xl border-b border-base-content/5;
+  padding: 0.75rem 0; /* More compact header */
   position: sticky;
   top: 0;
   z-index: 50;
@@ -47,28 +100,11 @@
 .navbar-inner {
   max-width: 960px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem; /* Consistent with app-main */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-}
-
-.navbar-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.navbar-title span {
-  display: block;
-  font-size: 1.125rem;
-  line-height: 1.35;
-}
-
-.navbar-subtitle {
-  font-size: 0.875rem;
-  @apply text-base-content/60;
+  gap: 1rem;
 }
 
 /* Badge stato autenticazione */
@@ -88,7 +124,6 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;
-  @apply shadow-[0_0_0_2px_hsl(var(--b1))];
 }
 
 .badge-custom.success {
@@ -109,21 +144,20 @@
 
 /* Banner redirect / alert */
 .alert-custom {
-  @apply rounded-lg border border-base-content/20 p-4 my-4 flex items-center gap-3 bg-base-200;
+  @apply rounded-2xl border border-base-content/10 p-4 my-4 flex items-center gap-3 bg-base-200 shadow-none;
 }
 
 .alert-custom.error {
-  @apply bg-error/20 border-error text-error;
+  @apply bg-error/10 border-error/20 text-error;
 }
 
 .alert-custom.success {
-  @apply bg-success/20 border-success text-success;
+  @apply bg-success/10 border-success/20 text-success;
 }
 
 /* Card principale autenticazione */
 .auth-card {
-  @apply rounded-2xl border border-base-content/10 bg-base-100/50 backdrop-blur-lg shadow-2xl;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  @apply rounded-[2rem] border border-base-content/5 bg-base-200/50 shadow-none;
 }
 
 .auth-card-header {
@@ -146,12 +180,12 @@
 
 /* Pulsanti custom - usa le classi DaisyUI */
 .btn-custom {
-  @apply btn btn-primary shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200;
+  @apply btn btn-primary rounded-full shadow-none hover:shadow-none hover:bg-primary/90 transition-all duration-200 border-none;
 }
 
 /* Loader personalizzato - usa loading di DaisyUI */
 .loading-custom {
-  @apply loading loading-spinner loading-lg;
+  @apply loading loading-spinner loading-lg text-primary;
 }
 
 @keyframes spin {
@@ -162,8 +196,10 @@
 
 /* Footer */
 .app-footer {
-  @apply border-t border-base-content/10 bg-base-200/90 backdrop-blur-lg;
+  @apply border-t border-base-content/10 bg-base-200; /* Removed backdrop-blur-lg to avoid stacking context issues */
   margin-top: 3rem;
+  position: relative;
+  z-index: 0;
 }
 
 .app-footer-inner {
@@ -188,5 +224,13 @@ body {
 /* Use Google Sans Flex for code and monospace contexts */
 code, pre, .font-mono {
   font-family: 'Google Sans Flex', ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* Ensure tall dropdowns on mobile have a high z-index to avoid clipping behind footers */
+.dropdown-content,
+[role="menu"],
+[data-popover],
+.shogun-dropdown {
+  z-index: 99999 !important;
 }
 

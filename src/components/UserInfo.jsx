@@ -30,7 +30,11 @@ const UserInfo = ({ user, onLogout }) => {
     if (userPub) {
       try {
         const avatarSrc = gunAvatar({ pub: userPub, size: 64 });
-        return <img src={avatarSrc} alt={displayName} />;
+        // Strip any newlines or invalid characters from the base64 string and convert base64url to standard base64
+        const cleanAvatarSrc = typeof avatarSrc === 'string' 
+          ? avatarSrc.replace(/[\n\r]/g, '').replace(/-/g, '+').replace(/_/g, '/')
+          : avatarSrc;
+        return <img src={cleanAvatarSrc} alt={displayName} />;
       } catch (e) {
         console.error("Error generating gun-avatar:", e);
         // Fallback to initials if gun-avatar fails
@@ -77,37 +81,37 @@ const UserInfo = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-base-200">
+    <div className="card bg-base-200/50 rounded-[2rem] border border-base-content/5 transition-all duration-300">
       <div className="card-body">
         <div className="flex items-center gap-4">
           <div className="avatar">
-            <div className="w-16 rounded-full ring ring-primary/50 ring-offset-base-100 ring-offset-2 hover:scale-105 hover:ring-primary transition-all duration-300">
+            <div className="w-16 rounded-full ring-2 ring-primary/20 ring-offset-base-100 ring-offset-2 transition-all duration-300">
               {avatarContent}
             </div>
           </div>
           <div>
-            <h2 className="card-title">{displayName}</h2>
-            <p className="text-sm opacity-70">{email || username}</p>
+            <h2 className="card-title text-2xl font-bold">{displayName}</h2>
+            <p className="text-sm text-base-content/60">{email || username}</p>
           </div>
         </div>
 
-        <div className="divider"></div>
+        <div className="divider opacity-50"></div>
 
         <div className="flex justify-between items-center gap-2">
           <button 
-            className="btn btn-sm btn-ghost hover:bg-base-200 transition-colors"
+            className="btn btn-sm btn-ghost rounded-full hover:bg-base-300 transition-colors"
             onClick={toggleDetails}
           >
             {showDetails ? 'Hide Details' : 'Show Details'}
           </button>
           <button 
-            className="btn btn-sm btn-outline btn-primary hover:-translate-y-0.5 transition-transform duration-200"
+            className="btn btn-sm btn-outline btn-primary rounded-full transition-all duration-200"
             onClick={() => setShowQRModal(true)}
           >
             📱 QR Code
           </button>
           <button 
-            className="btn btn-sm btn-soft btn-error hover:-translate-y-0.5 transition-transform duration-200"
+            className="btn btn-sm btn-soft btn-error rounded-full transition-all duration-200"
             onClick={onLogout}
           >
             Logout
@@ -115,15 +119,15 @@ const UserInfo = ({ user, onLogout }) => {
         </div>
 
         {showDetails && (
-          <div className="mt-4 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-300 bg-base-200/50 p-4 rounded-xl border border-base-300">
+          <div className="mt-4 space-y-3 text-sm animate-in fade-in slide-in-from-top-2 duration-300 bg-base-300/30 p-5 rounded-[1.5rem] border border-base-content/5">
             <div className="grid grid-cols-3 gap-2 items-center">
               <span className="font-semibold text-base-content/70 col-span-1">User ID:</span>
-              <span className="truncate col-span-2 font-mono text-xs bg-base-300/50 p-1.5 rounded">{user.userPub || 'N/A'}</span>
+              <span className="truncate col-span-2 font-mono text-xs bg-base-300/50 p-2 rounded-lg">{user.userPub || 'N/A'}</span>
             </div>
             
             <div className="grid grid-cols-3 gap-2 items-center">
               <span className="font-semibold text-base-content/70 col-span-1">Username:</span>
-              <span className="col-span-2">{user.username}</span>
+              <span className="col-span-2 font-medium">{user.username}</span>
             </div>
             
           </div>

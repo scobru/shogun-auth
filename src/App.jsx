@@ -111,7 +111,7 @@ const MainApp = ({ shogun, gunInstance, location }) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              className="stroke-[#4F6BF6] shrink-0 w-6 h-6"
+              className="stroke-success shrink-0 w-6 h-6"
             >
               <path
                 strokeLinecap="round"
@@ -120,7 +120,7 @@ const MainApp = ({ shogun, gunInstance, location }) => {
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               ></path>
             </svg>
-            <span className="text-[#4F6BF6]">
+            <span className="text-success">
               Authentication successful! Redirecting you back to the
               application...
             </span>
@@ -130,34 +130,33 @@ const MainApp = ({ shogun, gunInstance, location }) => {
         {/* Display user info after login */}
         {isLoggedIn && (
           <div className="mb-6">
-            <React.Suspense fallback={<div className="flex justify-center p-4"><span className="loading loading-spinner loading-md"></span></div>}>
+            <React.Suspense fallback={<div className="flex justify-center p-4"><span className="loading-custom"></span></div>}>
               <UserInfo user={{ userPub, username }} onLogout={logout} />
             </React.Suspense>
           </div>
         )}
 
-        <div className="auth-card card mb-6 p-8">
-          <div className="card-body">
-            <div className="auth-card-header">
+        <div className="auth-card card mb-6 p-4 sm:p-8 overflow-visible border-none bg-base-200/50">
+          <div className="card-body overflow-visible p-0">
+            <div className="auth-card-header mb-6">
               <div>
-                <h2 className="auth-card-title">Authentication</h2>
-                <p className="auth-card-caption">
-                  Connect with your preferred method and let Shogun handle the
-                  rest.
+                <h2 className="auth-card-title text-xl sm:text-2xl font-bold">Authentication</h2>
+                <p className="auth-card-caption text-sm sm:text-base text-base-content/70">
+                  Connect with your preferred method.
                 </p>
               </div>
             </div>
 
             {/* ShogunButton handles both logged-in and logged-out states, show it unless we're redirecting */}
             {isLoggedIn && redirectUrl ? (
-              <div className="flex justify-center">
+              <div className="flex justify-center py-10">
                 <div className="text-center">
                   <div className="loading-custom mx-auto"></div>
-                  <p className="mt-3 text-secondary">Preparing redirect...</p>
+                  <p className="mt-3 text-primary font-medium">Preparing redirect...</p>
                 </div>
               </div>
             ) : (
-              <div className="flex justify-center">
+              <div className="flex justify-center pb-[340px] sm:pb-[320px]">
                 <ShogunButton />
               </div>
             )}

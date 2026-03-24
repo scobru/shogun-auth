@@ -205,34 +205,34 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <Modal.Header>QR Code Authentication</Modal.Header>
       <Modal.Body>
-        <div className="space-y-4">
+        <div className="space-y-6">
         {/* Mode Toggle */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex p-1 bg-base-300/50 rounded-full gap-1">
           <button
-            className={`btn btn-sm flex-1 ${mode === "export" ? "btn-primary" : "btn-outline"}`}
+            className={`btn btn-sm flex-1 rounded-full border-none shadow-none ${mode === "export" ? "btn-primary" : "btn-ghost"}`}
             onClick={() => {
               setMode("export");
               setError(null);
               setScanning(false);
             }}
           >
-            📤 Esporta Chiavi
+            📤 Export Keys
           </button>
           <button
-            className={`btn btn-sm flex-1 ${mode === "import" ? "btn-primary" : "btn-outline"}`}
+            className={`btn btn-sm flex-1 rounded-full border-none shadow-none ${mode === "import" ? "btn-primary" : "btn-ghost"}`}
             onClick={() => {
               setMode("import");
               setError(null);
               setScanning(false);
             }}
           >
-            📥 Importa Chiavi
+            📥 Import Keys
           </button>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="alert alert-error">
+          <div className="alert alert-error rounded-2xl shadow-none">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="stroke-current shrink-0 h-6 w-6"
@@ -246,29 +246,29 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>{error}</span>
+            <span className="font-medium">{error}</span>
           </div>
         )}
 
         {/* Export Mode */}
         {mode === "export" && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-4">
-                Inquadra questo QR code con un altro dispositivo per effettuare il login automaticamente
+              <p className="text-sm text-base-content/60 mb-6">
+                Scan this QR code with another device to log in automatically.
               </p>
               
               {/* Export Format Toggle */}
-              <div className="flex justify-center mb-4">
-                <div className="join">
+              <div className="flex justify-center mb-6">
+                <div className="join bg-base-300/50 p-1 rounded-full">
                   <button 
-                    className={`join-item btn btn-xs ${exportFormat === 'json' ? 'btn-active' : ''}`}
+                    className={`join-item btn btn-xs rounded-full px-4 border-none shadow-none ${exportFormat === 'json' ? 'btn-primary' : 'btn-ghost'}`}
                     onClick={() => setExportFormat('json')}
                   >
                     JSON
                   </button>
                   <button 
-                    className={`join-item btn btn-xs ${exportFormat === 'link' ? 'btn-active' : ''}`}
+                    className={`join-item btn btn-xs rounded-full px-4 border-none shadow-none ${exportFormat === 'link' ? 'btn-primary' : 'btn-ghost'}`}
                     onClick={() => setExportFormat('link')}
                   >
                     Magic Link
@@ -277,8 +277,8 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
               </div>
 
               {exportKeys ? (
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <div className="flex flex-col items-center space-y-6">
+                  <div className="bg-white p-6 rounded-[2rem] border-4 border-base-content/5">
                     <QRCodeSVG
                       value={exportKeys}
                       size={256}
@@ -287,16 +287,16 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
                     />
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <button
-                      className="btn btn-sm btn-outline"
+                      className="btn btn-sm btn-outline btn-primary rounded-full px-6"
                       onClick={copyToClipboard}
                     >
-                      {exportKeys.startsWith('http') ? '🔗 Copia Link' : '📋 Copia JSON'}
+                      {exportKeys.startsWith('http') ? '🔗 Copy Link' : '📋 Copy JSON'}
                     </button>
                     {!exportKeys.startsWith('http') && (
                       <button
-                        className="btn btn-sm btn-outline"
+                        className="btn btn-sm btn-outline btn-primary rounded-full px-6"
                         onClick={downloadKeys}
                       >
                         💾 Download JSON
@@ -304,7 +304,7 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
                     )}
                   </div>
 
-                  <div className="alert alert-warning">
+                  <div className="alert alert-warning rounded-[1.5rem] shadow-none bg-warning/10 border-warning/20 text-warning-content">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="stroke-current shrink-0 h-6 w-6"
@@ -318,15 +318,15 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                       />
                     </svg>
-                    <span className="text-xs">
-                      ⚠️ Attenzione: {exportKeys.startsWith('http') ? 'Questo link' : 'Questo QR code'} contiene le tue chiavi private. 
-                      Non condividerlo mai pubblicamente!
+                    <span className="text-xs font-bold leading-tight">
+                      ⚠️ WARNING: {exportKeys.startsWith('http') ? 'This link' : 'This QR code'} contains your private keys. 
+                      NEVER share it publicly!
                     </span>
                   </div>
                 </div>
               ) : (
-                <div className="alert alert-error">
-                  <span>Impossibile esportare le chiavi. Assicurati di essere autenticato.</span>
+                <div className="alert alert-error rounded-2xl shadow-none">
+                  <span className="font-medium">Failed to export keys. Ensure you are authenticated.</span>
                 </div>
               )}
             </div>
@@ -335,30 +335,30 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
 
         {/* Import Mode */}
         {mode === "import" && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-4">
-                Inquadra il QR code dal dispositivo che contiene le chiavi da importare
+              <p className="text-sm text-base-content/60 mb-6">
+                Scan the QR code from the device containing the keys to import.
               </p>
 
               {!scanning ? (
                 <button
-                  className="btn btn-primary w-full"
+                  className="btn btn-primary rounded-full w-full py-4 h-auto text-lg font-bold shadow-none"
                   onClick={() => setScanning(true)}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <span className="loading loading-spinner"></span>
-                      Caricamento...
+                      <span className="loading-custom"></span>
+                      Loading...
                     </>
                   ) : (
-                    "📷 Avvia Scansione"
+                    "📷 Start Scanning"
                   )}
                 </button>
               ) : (
-                <div className="space-y-4">
-                  <div className="relative" style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }}>
+                <div className="space-y-6">
+                  <div className="relative overflow-hidden rounded-[2rem] border-4 border-primary/20 bg-black" style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }}>
                     <QrReader
                       delay={300}
                       onError={handleScanError}
@@ -369,13 +369,13 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
                   </div>
                   
                   <button
-                    className="btn btn-sm btn-outline w-full"
+                    className="btn btn-sm btn-ghost rounded-full w-full font-bold text-error"
                     onClick={() => {
                       setScanning(false);
                       setError(null);
                     }}
                   >
-                    ❌ Annulla Scansione
+                    ❌ Cancel Scan
                   </button>
                 </div>
               )}
