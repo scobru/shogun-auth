@@ -30,11 +30,13 @@ const UserInfo = ({ user, onLogout }) => {
     if (userPub) {
       try {
         const avatarSrc = gunAvatar({ pub: userPub, size: 64 });
-        // Strip any newlines or invalid characters from the base64 string and convert base64url to standard base64
-        const cleanAvatarSrc = typeof avatarSrc === 'string' 
-          ? avatarSrc.replace(/[\n\r]/g, '').replace(/-/g, '+').replace(/_/g, '/')
-          : avatarSrc;
-        return <img src={cleanAvatarSrc} alt={displayName} />;
+        if (avatarSrc) {
+          // Strip any newlines or invalid characters from the base64 string and convert base64url to standard base64
+          const cleanAvatarSrc = typeof avatarSrc === 'string'
+            ? avatarSrc.replace(/[\n\r]/g, '').replace(/-/g, '+').replace(/_/g, '/')
+            : avatarSrc;
+          return <img src={cleanAvatarSrc} alt={displayName} />;
+        }
       } catch (e) {
         console.error("Error generating gun-avatar:", e);
         // Fallback to initials if gun-avatar fails
