@@ -43,5 +43,5 @@ export const decodeAuthData = (encodedData) => {
   }
 };
 
-export const APP_NAME = "Shogun Vault";
+export const APP_NAME = "Shogun Auth";
 export const VERSION = "1.1.0";
