@@ -52,11 +52,8 @@ const EncryptedDataManager = ({ shogun, authStatus }) => {
           });
         }
 
-        // Wait a bit to ensure we've loaded all data
-        setTimeout(() => {
-          setStoredData(data);
-          resolve();
-        }, 500);
+        setStoredData(data);
+        resolve();
       });
     } catch (err) {
       console.error("Error loading data:", err);
