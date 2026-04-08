@@ -136,4 +136,3 @@ const UserInfo = ({ user, onLogout }) => {
 };
 
 export default UserInfo;
-fo; 
