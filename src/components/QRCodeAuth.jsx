@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { QrReader } from "react-qr-reader";
 import { useShogun } from "shogun-button-react";
 import Modal from "./ui/Modal";
+import { encodeAuthData } from "../config";
 
 /**
  * Component for exporting and importing authentication keys via QR code
@@ -89,10 +90,10 @@ const QRCodeAuth = ({ isOpen, onClose }) => {
       if (exportFormat === 'link') {
         // Generate Magic Link
         // Use window.location.origin to point to the current app instance
-        // Encode data as Base64 to be url-safe(-ish)
-        const base64Data = btoa(jsonString);
+        // Encode data as Base64 to be url-safe using our central utility
+        const base64Data = encodeAuthData(exportData);
         const url = new URL(window.location.origin);
-        url.searchParams.set("magic_login", base64Data);
+        url.searchParams.set("magic", base64Data);
         setExportKeys(url.toString());
       } else {
         // Default JSON

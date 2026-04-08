@@ -17,9 +17,11 @@ import { shogunConnector } from "shogun-button-react";
 import Gun from "gun";
 import "gun/sea"
 import { ThemeToggle } from "./components/ui/ThemeToggle";
+import EncryptedDataManager from "./components/vault/EncryptedDataManager";
+import ConnectionStatus from "./components/vault/ConnectionStatus";
+import { DEFAULT_RELAYS, decodeAuthData, APP_NAME } from "./config";
 
 // Lazy load heavy components
-const EncryptedDataManager = React.lazy(() => import("./components/vault/EncryptedDataManager"));
 const UserInfo = React.lazy(() => import("./components/UserInfo"));
 import logo from "./assets/logo.svg";
 
@@ -33,6 +35,9 @@ const MainApp = ({ shogun, gunInstance, location }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const redirectUrl = searchParams.get("redirect");
+  
+  // Navigation state for the vault
+  const [activeTab, setActiveTab] = useState("all");
 
   // Reference to track if a success message has been shown
   const authSuccessShown = useRef(false);
@@ -41,34 +46,30 @@ const MainApp = ({ shogun, gunInstance, location }) => {
   // Load proofs when logged in
   useEffect(() => {
     // Handle Magic Link Login
-    const magicLoginData = searchParams.get("magic_login");
+    const magicLoginData = searchParams.get("magic") || searchParams.get("magic_login");
     
     if (magicLoginData && !isLoggedIn && !magicLoginAttempted.current && shogun) {
       magicLoginAttempted.current = true;
-      console.log("Found magic login data, attempting auth...");
+      console.log("Applying magic login data...");
       
       try {
-        const jsonString = atob(magicLoginData);
-        const data = JSON.parse(jsonString);
-        
-        if (data.type === "shogun-auth-pair" && data.pair) {
-          shogun.loginWithPair(data.username || "User", data.pair)
-            .then(() => {
-              console.log("Magic login successful!");
-              // Clear URL
-              searchParams.delete("magic_login");
-              navigate({
-                search: searchParams.toString(),
-              }, { replace: true });
-              alert("✅ Login effettuato via Magic Link!");
-            })
-            .catch(err => {
-              console.error("Magic login failed:", err);
-              alert("❌ Errore login Magic Link: " + err.message);
+        const authData = decodeAuthData(magicLoginData);
+        if (authData && authData.pair) {
+          const gun = shogun.gun || (shogun.db && shogun.db.gun);
+          if (gun) {
+            gun.user().auth(authData.pair, (ack) => {
+              if (ack.err) {
+                console.error("Magic login failed:", ack.err);
+                navigate({ search: "" }, { replace: true });
+              } else {
+                console.log("Magic login success!");
+                navigate({ search: "" }, { replace: true });
+              }
             });
+          }
         }
       } catch (e) {
-        console.error("Invalid magic link data:", e);
+        console.error("Critical error during magic login:", e);
       }
     }
 
@@ -77,26 +78,125 @@ const MainApp = ({ shogun, gunInstance, location }) => {
       if (location?.state?.authSuccess && !authSuccessShown.current) {
         authSuccessShown.current = true;
         console.log("OAuth login completed successfully!");
-        // Here you could show a toast or success alert
       }
     }
   }, [isLoggedIn, location, redirectUrl, navigate, searchParams, shogun]);
 
+  const Sidebar = () => (
+    <aside className="vault-sidebar">
+      <div className="flex items-center gap-3 mb-4">
+        <img src={logo} alt="Shogun Vault" className="w-10 h-10" />
+        <span className="font-bold text-xl sidebar-text">Vault</span>
+      </div>
+
+      <nav className="sidebar-nav">
+        <div 
+          className={`nav-item ${activeTab === "all" ? "active" : ""}`}
+          onClick={() => setActiveTab("all")}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          <span className="sidebar-text">All Items</span>
+        </div>
+        <div 
+          className={`nav-item ${activeTab === "passwords" ? "active" : ""}`}
+          onClick={() => setActiveTab("passwords")}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+          </svg>
+          <span className="sidebar-text">Passwords</span>
+        </div>
+        <div 
+          className={`nav-item ${activeTab === "notes" ? "active" : ""}`}
+          onClick={() => setActiveTab("notes")}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span className="sidebar-text">Secure Notes</span>
+        </div>
+        <div 
+          className={`nav-item ${activeTab === "auth" ? "active" : ""}`}
+          onClick={() => setActiveTab("auth")}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span className="sidebar-text">Auth Status</span>
+        </div>
+      </nav>
+
+      <div className="mt-auto pt-6 border-t border-base-content/5">
+        <ThemeToggle />
+        <button 
+          onClick={logout}
+          className="nav-item w-full text-error hover:bg-error/10 mt-4"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span className="sidebar-text">Logout</span>
+        </button>
+      </div>
+    </aside>
+  );
+
+  // If logged in, show the Vault Layout
+  if (isLoggedIn && !redirectUrl) {
+    return (
+      <div className="vault-layout">
+        <Sidebar />
+        <main className="vault-content animate-vault-in">
+          <header className="p-6 flex justify-between items-center border-b border-base-content/5 bg-base-100/50 backdrop-blur-xl sticky top-0 z-30">
+            <h1 className="text-2xl font-bold capitalize">{activeTab.replace("-", " ")}</h1>
+            <div className="flex items-center gap-4">
+              <div className={`badge-custom success`}>
+                <span className="badge-dot" />
+                <span>Connected</span>
+              </div>
+            </div>
+          </header>
+
+          <div className="p-4 sm:p-8 flex-1">
+            {activeTab === 'auth' && (
+              <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+                <UserInfo />
+                <ConnectionStatus shogun={shogun} />
+              </div>
+            )}
+            {activeTab !== 'auth' && (
+              <React.Suspense fallback={<div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>}>
+                <EncryptedDataManager
+                  shogun={shogun}
+                  authStatus={{ user: { userPub, username }, isLoggedIn }}
+                  category={activeTab}
+                />
+              </React.Suspense>
+            )}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Logged out or redirecting layout (Original clean look)
   return (
-    <div className="app-shell">
+    <div className="app-shell justify-center">
       <header className="navbar-custom">
         <div className="navbar-inner">
           <div className="navbar-title">
             <img src={logo} alt="Shogun Auth" className="w-12 h-12" />
             <div>
-              <span className="font-semibold">Auth</span>
+              <span className="font-semibold">{APP_NAME}</span>
             </div>
           </div>
           <ThemeToggle />
         </div>
       </header>
 
-      <main className="app-main">
+      <main className="app-main flex flex-col justify-center">
         <div className="flex justify-center mb-6">
           <div className={`badge-custom ${isLoggedIn ? "success" : "error"}`}>
             <span className="badge-dot" />
@@ -106,48 +206,27 @@ const MainApp = ({ shogun, gunInstance, location }) => {
 
         {/* Display redirect notice if applicable */}
         {isLoggedIn && redirectUrl && (
-          <div className="alert-custom success">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-success shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
+          <div className="alert-custom success max-w-md mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-success shrink-0 w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-success">
-              Authentication successful! Redirecting you back to the
-              application...
+            <span className="text-success text-sm">
+              Authentication successful! Redirecting you back...
             </span>
           </div>
         )}
 
-        {/* Display user info after login */}
-        {isLoggedIn && (
-          <div className="mb-6">
-            <React.Suspense fallback={<div className="flex justify-center p-4"><span className="loading-custom"></span></div>}>
-              <UserInfo user={{ userPub, username }} onLogout={logout} />
-            </React.Suspense>
-          </div>
-        )}
-
-        <div className="auth-card card mb-6 p-4 sm:p-8 overflow-visible border-none bg-base-200/50">
+        <div className="auth-card card max-w-lg mx-auto w-full p-4 sm:p-8 overflow-visible border-none bg-base-200/50">
           <div className="card-body overflow-visible p-0">
             <div className="auth-card-header mb-6">
               <div>
-                <h2 className="auth-card-title text-xl sm:text-2xl font-bold">Authentication</h2>
-                <p className="auth-card-caption text-sm sm:text-base text-base-content/70">
-                  Connect with your preferred method.
+                <h2 className="auth-card-title text-xl sm:text-2xl font-bold text-center">Authentication</h2>
+                <p className="auth-card-caption text-sm sm:text-base text-base-content/70 text-center">
+                  Connect to access your secure vault.
                 </p>
               </div>
             </div>
 
-            {/* ShogunButton handles both logged-in and logged-out states, show it unless we're redirecting */}
             {isLoggedIn && redirectUrl ? (
               <div className="flex justify-center py-10">
                 <div className="text-center">
@@ -162,42 +241,15 @@ const MainApp = ({ shogun, gunInstance, location }) => {
             )}
           </div>
         </div>
-
-        {/* Add Encrypted Data Manager when user is logged in (but not if redirecting) */}
-        {isLoggedIn && !redirectUrl && (
-          <React.Suspense fallback={<div className="flex justify-center p-8"><span className="loading loading-spinner loading-lg"></span></div>}>
-            <EncryptedDataManager
-              shogun={shogun}
-              authStatus={{ user: { userPub, username }, isLoggedIn }}
-            />
-          </React.Suspense>
-        )}
-
-        {/* Se vuoi gestire errori, aggiungi qui uno stato custom o usa error di useShogun se disponibile */}
       </main>
 
-      <footer className="app-footer">
-        <div className="app-footer-inner">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span>Built with</span>
-              <span className="text-primary">♥</span>
-              <span>by</span>
-              <a href="https://shogun-eco.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                Shogun
-              </a>
-            </div>
-            <div className="flex items-center gap-4">
-              <a href="https://github.com/scobru/shogun-auth" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                GitHub
-              </a>
-              <a href="https://shogun-eco.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                Shogun Project
-              </a>
-            </div>
+      {!isLoggedIn && (
+        <footer className="app-footer">
+          <div className="app-footer-inner">
+            <p>Built with ❤️ by Shogun</p>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 };
@@ -210,7 +262,7 @@ const MainAppWithLocation = (props) => {
 
 function ShogunApp({ shogun }) {
   const appOptions = {
-    appName: "Shogun Auth App",
+    appName: APP_NAME,
     shogun,
     authMethods: [
       { type: "password" },
@@ -222,19 +274,8 @@ function ShogunApp({ shogun }) {
     theme: "dark",
   };
 
-  // Usa useShogun dal context
-  const { isLoggedIn, userPub, username, login, signUp, logout, sdk } =
-    useShogun();
+  const { isLoggedIn, userPub, username, logout } = useShogun();
 
-  // authStatus compatibile con la vecchia struttura
-  const authStatus = {
-    user: { userPub, username },
-    isLoggedIn,
-    isLoading: false, // puoi aggiungere uno stato custom se serve
-    error: null, // puoi aggiungere uno stato custom se serve
-  };
-
-  // Handler per login/logout (se vuoi log custom)
   const handleLoginSuccess = (result) => {
     console.log("Login success:", result);
   };
@@ -250,24 +291,10 @@ function ShogunApp({ shogun }) {
   };
 
   const providerOptions = {
-    appName: appOptions.appName,
-    theme: appOptions.theme,
-    showWebauthn: true,
-    showMetamask: true,
-    showNostr: true,
-    showZkProof: true,
-    enableGunDebug: true,
-    enableConnectionMonitoring: true,
+    chain: "gun",
+    app: "shogun-vault",
+    relays: DEFAULT_RELAYS,
   };
-
-  // Debug provider options
-  console.log("ShogunButtonProvider options:", providerOptions);
-  console.log("Shogun SDK plugins:", {
-    web3: shogun?.hasPlugin("web3"),
-    webauthn: shogun?.hasPlugin("webauthn"),
-    nostr: shogun?.hasPlugin("nostr"),
-    zkproof: shogun?.hasPlugin("zkproof"),
-  });
 
   return (
     <Router>
@@ -314,13 +341,12 @@ function App() {
         const peersToUse =
           fetchedRelays && fetchedRelays.length > 0
             ? fetchedRelays
-            : ["https://gun.defucc.me/gun","https://gun.o8.is/gun","https://shogun-relay.scobrudot.dev/gun","https://relay.peer.ooo/gun"];
+            : DEFAULT_RELAYS;
 
         setRelays(peersToUse);
       } catch (error) {
         console.error("Error fetching relays:", error);
-        // Fallback to default peer
-        setRelays(["https://gun.defucc.me/gun","https://gun.o8.is/gun","https://shogun-relay.scobrudot.dev/gun","https://relay.peer.ooo/gun"]);
+        setRelays(DEFAULT_RELAYS);
       } finally {
         setIsLoadingRelays(false);
       }

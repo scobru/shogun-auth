@@ -11,7 +11,7 @@ export const ThemeToggle = () => {
   });
 
   // Update theme in localStorage and apply to document
-  const setTheme = (theme) => {
+  const applyTheme = (theme) => {
     setCurrentTheme(theme);
     localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
@@ -21,32 +21,26 @@ export const ThemeToggle = () => {
 
   // Initialize theme on component mount
   useEffect(() => {
-    setTheme(currentTheme);
+    applyTheme(currentTheme);
   }, []);
 
-  // Handle theme change
-  const handleThemeChange = (e) => {
-    setTheme(e.target.value);
-  };
-
   return (
-    <div className="dropdown dropdown-end">
-      <div tabIndex={0} role="button" className="btn-custom m-1">
-        <span className="inline-flex items-center gap-1">
-          <span
-            className="inline-block w-2 h-2 rounded-full"
-            style={{
-              backgroundColor: currentTheme === "dark" ? "#38bdf8" : "#f97316",
-            }}
-          />
-          <span className="text-xs uppercase tracking-wide">
-            {currentTheme === "dark" ? "Dark theme" : "Light theme"}
-          </span>
+    <div className="dropdown dropdown-top dropdown-end sm:dropdown-right w-full">
+      <div tabIndex={0} role="button" className="btn btn-ghost w-full sm:justify-start gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-2xl border-none shadow-none bg-primary/10 text-primary h-auto min-h-0">
+        <span
+          className="inline-block w-2 h-2 rounded-full animate-pulse shrink-0"
+          style={{
+            backgroundColor: currentTheme === "dark" ? "#D0BCFF" : "#6750A4",
+            boxShadow: `0 0 10px ${currentTheme === "dark" ? "#D0BCFF" : "#6750A4"}`
+          }}
+        />
+        <span className="text-[10px] sm:text-xs uppercase font-bold tracking-widest flex-1 text-left">
+          {currentTheme === "dark" ? "Dark mode" : "Light mode"}
         </span>
         <svg
           width="12"
           height="12"
-          className="h-2 w-2 fill-current opacity-60 inline-block ml-1"
+          className="h-3 w-3 fill-current opacity-40 shrink-0"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 2048 2048"
         >
@@ -55,23 +49,21 @@ export const ThemeToggle = () => {
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content z-[1] p-2 shadow-none bg-base-300 rounded-[1.5rem] w-52 border border-base-content/5"
+        className="dropdown-content z-[9999] mb-2 p-2 shadow-2xl bg-base-300 rounded-[1.5rem] w-52 sm:w-full border border-base-content/10 backdrop-blur-xl"
       >
         {themes.map((theme) => (
-          <li key={theme} className="form-control">
-            <label className="label cursor-pointer justify-between">
-              <span className="label-text text-sm capitalize">
-                {theme === "dark" ? "Dark" : "Light"}
-              </span>
-              <input
-                type="radio"
-                name="theme-dropdown"
-                className="radio theme-controller"
-                value={theme}
-                checked={currentTheme === theme}
-                onChange={handleThemeChange}
-              />
-            </label>
+          <li key={theme}>
+            <button
+              onClick={() => applyTheme(theme)}
+              className={`flex items-center justify-between w-full px-4 py-3 rounded-xl hover:bg-primary/10 transition-colors ${currentTheme === theme ? 'text-primary font-bold bg-primary/5' : ''}`}
+            >
+              <span className="capitalize">{theme}</span>
+              {currentTheme === theme && (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
+            </button>
           </li>
         ))}
       </ul>
@@ -79,4 +71,4 @@ export const ThemeToggle = () => {
   );
 };
 
-export default ThemeToggle; 
+export default ThemeToggle;
