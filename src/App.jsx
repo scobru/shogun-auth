@@ -162,7 +162,7 @@ const MainApp = ({ shogun, gunInstance, location }) => {
           <div className="p-4 sm:p-8 flex-1">
             {activeTab === 'auth' && (
               <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-                <UserInfo />
+                <UserInfo user={{ userPub, username }} onLogout={logout} />
                 <ConnectionStatus shogun={shogun} />
               </div>
             )}
