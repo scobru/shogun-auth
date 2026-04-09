@@ -146,7 +146,7 @@ const UserInfo = ({ user, onLogout }) => {
 
         <div className="mt-8">
            <button 
-            className="btn btn-sm btn-error btn-ghost bg-error/5 hover:bg-error hover:text-white rounded-xl w-full border-none transition-all duration-300 gap-2"
+            className="btn btn-sm btn-error btn-ghost logout-btn bg-error/5 hover:bg-error hover:text-white rounded-xl w-full border-none transition-all duration-300 gap-2"
             onClick={onLogout}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

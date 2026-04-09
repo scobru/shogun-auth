@@ -235,7 +235,7 @@ const MainApp = ({ shogun, gunInstance, location }) => {
                 </div>
               </div>
             ) : (
-              <div className="flex justify-center pb-[340px] sm:pb-[320px]">
+              <div className="flex justify-center shogun-btn-wrapper pb-[340px] sm:pb-[320px]">
                 <ShogunButton />
               </div>
             )}
